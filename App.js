@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, TouchableHighlight } from 'react-native';
 
 export default function App() {
 
   const [phoneNumber, setPhoneNumber] = useState('')
   const [checkNumber, setCheckNumber] = useState('')
+
   let showText
   if (!phoneNumber || !checkNumber) showText = ''
   else showText = phoneNumber !== checkNumber ? `${phoneNumber} 與 ${checkNumber} 不同` : `上下相同無誤`
@@ -18,12 +19,19 @@ export default function App() {
     setCheckNumber(num)
   }
 
+  // clear btn
   const clear = () => {
     setPhoneNumber('')
     setCheckNumber('')
   }
 
-  return (
+  // page change
+  const [pageStatus, setPageStatus] = useState(1)
+  const changePage = (pageIdx) => {
+    setPageStatus(pageIdx)
+  }
+
+  if (pageStatus === 1) return (
     <View style={styles.container}>
       <Text style={styles.title}>- 號碼比較 APP -</Text>
       <TextInput
@@ -60,9 +68,32 @@ export default function App() {
         />
         <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold'  }}>Clear</Text>
       </TouchableOpacity>
+
+      <TouchableHighlight 
+        style={ styles.button }
+        onPress={() => {
+          changePage(2)
+        }}
+      >
+        <Text style={ styles.buttonText }>Change to page 2</Text>
+      </TouchableHighlight>
       <StatusBar style="auto" />
     </View>
-  );
+  )
+  if (pageStatus === 2) return (
+    <View style={styles.container}>
+      <Text style={{ fontSize: 20 }}>我是另一頁</Text>
+      <TouchableHighlight 
+        style={ styles.button }
+        onPress={() => {
+          changePage(1)
+        }}
+      >
+        <Text style={ styles.buttonText }>Change to page 1</Text>
+      </TouchableHighlight>
+      <StatusBar style="auto" />
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -88,5 +119,15 @@ const styles = StyleSheet.create({
   correct: {
     color: 'red',
     fontWeight: 'bold'
+  },
+  button: {
+    marginTop: 10,
+    backgroundColor: '#87CEFA',
+    borderRadius: 15
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 25,
+    padding: 10,
   }
 });
